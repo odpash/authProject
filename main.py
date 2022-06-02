@@ -3,7 +3,7 @@ import json
 from imutils import paths
 from tkinter import font as tkfont
 from tkinter.ttk import Label, Button
-from tkinter import Entry
+from tkinter import Entry, messagebox
 import pickle
 import face_recognition
 from PIL import Image, ImageTk
@@ -56,6 +56,7 @@ class SampleApp(tk.Tk):
 
             rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
             encodings = face_recognition.face_encodings(rgb)
+            self.encodings = encodings
             names = []
             if len(encodings) == 0:
                 self.counts = {}
@@ -163,19 +164,22 @@ class PageOne(tk.Frame):
         addToDb.place(x=550, y=300)
 
     def add(self, controller):
-        o = json.loads(open('db.json', 'r', encoding='UTF-8').read())
-        o.append({'id': len(o) + 1, 'fio': self.fio.get(), 'phone': self.phone.get(), 'group': self.group.get(),
-                  'napr': self.napravlenie.get()})
-        with open('db.json', 'w', encoding='UTF-8') as f:
-            f.write(json.dumps(o))
-        f.close()
-        self.fio.set("")
-        self.phone.set("")
-        self.group.set("")
-        self.napravlenie.set("")
-        self.make_screen(o[-1]['id'])
-        self.update_info()
-        controller.show_frame("StartPage")
+        if len(self.controller.encodings) == 0:
+            messagebox.showerror(title=None, message="Не удалось распознать лицо!")
+        else:
+            o = json.loads(open('db.json', 'r', encoding='UTF-8').read())
+            o.append({'id': len(o) + 1, 'fio': self.fio.get(), 'phone': self.phone.get(), 'group': self.group.get(),
+                      'napr': self.napravlenie.get()})
+            with open('db.json', 'w', encoding='UTF-8') as f:
+                f.write(json.dumps(o))
+            f.close()
+            self.fio.set("")
+            self.phone.set("")
+            self.group.set("")
+            self.napravlenie.set("")
+            self.make_screen(o[-1]['id'])
+            self.update_info()
+            controller.show_frame("StartPage")
 
     def make_screen(self, filename):
         p = os.path.join(os.path.abspath(os.curdir) + "/Images/", str(filename) + '.png')
