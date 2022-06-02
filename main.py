@@ -1,22 +1,13 @@
 import json
 
 from imutils import paths
-
-try:
-    import tkinter as tk  # python 3
-    from tkinter import font as tkfont  # python 3
-except ImportError:
-    import Tkinter as tk  # python 2
-    import tkFont as tkfont  # python 2
-from tkinter.ttk import Frame, Label, Style, Button
-from PIL import Image, ImageTk
-from tkinter import Tk, BOTH, Frame, Entry
+from tkinter import font as tkfont
+from tkinter.ttk import Label, Button
+from tkinter import Entry
 import pickle
-
 import face_recognition
 from PIL import Image, ImageTk
 import tkinter as tk
-import datetime
 import cv2
 import os
 
